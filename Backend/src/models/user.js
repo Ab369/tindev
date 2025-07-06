@@ -56,7 +56,7 @@ const userSchema=new Schema({
     },
     skills:{
         type:[String],
-        default:['No skills added'],
+        default:['fill skills seperated by comma(,)'],
         validate:{
             validator:(arr)=>arr.length>0 && arr.length<10,
             message:'skills cannot be more than 10'

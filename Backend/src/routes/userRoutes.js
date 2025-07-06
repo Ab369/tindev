@@ -16,10 +16,10 @@ router.get('/user/request/received',auth,async(req,res)=>{
       }).populate('fromId',showUserFields)
 
       if(receivedRequests.length==0){
-        throw new Error('no requests found!');
+        res.json({data:[]})
       }
       
-      res.json({data:receivedRequests[0].fromId});
+      res.json({data:receivedRequests.map((e)=>e)});
 
     }catch(err){
         res.json({message:err.message});
@@ -38,12 +38,14 @@ router.get('/user/connections',auth,async(req,res)=>{
      }).populate('toId',showUserFields)
      .populate('fromId',showUserFields);
 
+     let result=[];
+
      if(user_connections.length==0){
-       throw new Error('No connections found!');
+       res.json({data:result})
+       return;
      }
      
      //to prevent representing fromId data(as both from and toId are in user_connections data)
-     let result=[];
      user_connections.forEach((connection)=>{
         if(connection.fromId.equals(loggedUser)){
           result.push(connection.toId);
@@ -57,7 +59,7 @@ router.get('/user/connections',auth,async(req,res)=>{
     // res.json({data:user_connections});
 
    }catch(err){
-     res.json({message:err.message});
+     res.status(401).json({message:err.message});
    }
 })
 
@@ -99,7 +101,7 @@ router.get('/user/feed',auth,async (req,res)=>{
     }).select('-password').skip((page-1)*5).limit(limit);
     
     if(feed.length==0){
-      throw new Error('no profiles to show');
+      res.json({data:[]});
     }
     res.json({data:feed})
   

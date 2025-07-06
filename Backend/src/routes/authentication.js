@@ -20,9 +20,12 @@ router.post('/signup',async (req,res)=>{
 
 //login route
 router.post('/login',async(req,res)=>{
-    const {email,password}=req.body;
-
     try{
+         const email=req?.body?.email;
+         const password=req?.body?.password;
+        if(!email|!password){
+        throw new Error('Email or Password undefined')
+        }
        const found_user=await user.findOne({email:email});
        if(!found_user){
         throw new Error('invalid credentials');
@@ -39,12 +42,17 @@ router.post('/login',async(req,res)=>{
        const token=found_user.getJWTtoken(); //doing Auth-Step1 using schema method
 
        //Auth-Step2.storing token in cookies (Auth-Step 3 and 4 written in auth mware)
-       res.cookie('token',token,{ expires: new Date(Date.now() + 900000)});
-
-       res.json({message:'Logged in succesfully!'});
+       res.cookie('token',token,{ expires: new Date(Date.now() + 9000000)});
+       
+       res.json({message:'Logged in succesfully!',data:found_user});
     }catch(err){
-        res.status(401).json({message:err.message})
+        res.status(401).json({message:'Error Logging In: '+err.message})
     }
+})
+
+router.get('/logout',(req,res)=>{
+    res.clearCookie('token');
+    res.json({message:'logged Out'})
 })
 
 

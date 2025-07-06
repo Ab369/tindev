@@ -26,10 +26,11 @@ router.patch('/profile/edit',auth,async(req,res)=>{
         const update_restricted=Object.keys(updates).some((k)=>restricted_updates.includes(k));
         if(update_restricted)throw new Error('updating restricted fields');
         
-        await user.findOneAndUpdate({username:loggedUser.username},updates,{runValidators:true}); //true to run db level validations
-        res.json({message:'User profile updated!'})
+       const updatedData= await user.findOneAndUpdate({username:loggedUser.username},updates,{runValidators:true,new:true}); //true to run db level validations
+        
+        res.json({message:'User profile updated!',data:updatedData})
     }catch(err){
-        res.json({message:err.message})
+        res.status(500).json({message:err.message})
     }
 })
 
@@ -64,7 +65,7 @@ router.patch('/profile/changePassword',auth,async(req,res)=>{
        
        res.json({message:'Password Changed'});
     }catch(err){
-        res.json({message:err.message})
+        res.status(404).json({message:err.message})
     }
 })
 

@@ -1,10 +1,13 @@
 const express=require('express');
 const app=express();
 const connectDB=require('./config/db');
-const user=require('./models/user');
 const cookieParser=require('cookie-parser');
-const auth=require('./middlewares/auth')
+const cors=require('cors');
 
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials:true
+}));
 app.use(express.json());//for getting json response
 app.use(cookieParser());//for parsing/reading cookies
 
