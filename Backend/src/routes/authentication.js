@@ -3,6 +3,10 @@ const router=app.Router();
 const user=require('../models/user');
 const bcrypt=require('bcrypt')
 
+router.get('/check',(req,res)=>{
+    res.json({message:'checked'});
+})
+
 //create new account
 router.post('/signup',async (req,res)=>{
    try{ 
