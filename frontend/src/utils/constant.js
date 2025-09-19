@@ -1,3 +1,3 @@
-const SERVER='http://localhost:3000';
+const SERVER='api';
 
 export {SERVER};
