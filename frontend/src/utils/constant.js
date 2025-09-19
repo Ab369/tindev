@@ -1,3 +1,3 @@
-const SERVER='api';
+const SERVER='/api';
 
 export {SERVER};
