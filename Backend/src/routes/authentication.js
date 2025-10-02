@@ -2,9 +2,17 @@ const app=require('express');
 const router=app.Router();
 const user=require('../models/user');
 const bcrypt=require('bcrypt')
+const sendEmail=require('../utils/sendEmail')
 
-router.get('/check',(req,res)=>{
-    res.json({message:'checked'});
+router.get('/check',async(req,res)=>{
+    try{
+        await sendEmail();
+        res.json({message:'checked'});
+    }
+    catch(err){
+        res.send(err.message)
+    }
+   
 })
 
 //create new account
@@ -16,6 +24,8 @@ router.post('/signup',async (req,res)=>{
     //add user
     const newUser=new user({email,firstName,lastName,username,age,gender,password:passwordHash});
     await newUser.save();
+    
+    await sendEmail();
     res.json({message:'user account created!'});
 }catch(err){
     res.status(500).json({message:err.message});
